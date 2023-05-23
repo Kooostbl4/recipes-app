@@ -13,17 +13,19 @@ class CreateView {
     
     //click on submit button
     this.button.addEventListener("click", async () => {
-      //add recipe to API
-      let json = {
-        name: this.name.value,
-        ingredients: this.ingredients.value.split(", "), //.split(", ")
-        method: this.method.value,
-      };
-      json = await recipesApi.create(json);
-      //add new recipe to the list
-      listView.add(json);
+      if (this.name.value != ``) {
+        //add recipe to API
+        let json = {
+          name: this.name.value,
+          ingredients: this.ingredients.value.split(", "), //.split(", ")
+          method: this.method.value,
+        };
+        json = await recipesApi.create(json);
+        //add new recipe to the list
+        listView.add(json);
+      }
     });
-  }
+  } 
 }
 
 //create an area for creting recipes
