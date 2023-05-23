@@ -34,83 +34,81 @@ class ListView {
 
   //add a new recipe to API
   add(data) {
-    if (data.name != ``) {
-      //recipe body
-      let item = document.createElement("div");
-      item.classList.add(`card`);
-      item.classList.add(`mb-2`);
-      item.innerHTML = `<div class="card-body">
-                          ${data.name}
-                        </div>`;
-      this.list.append(item);
-      item.classList.add(`${data.name}`);
-      //
-  
-      //click on recipe
-      item.addEventListener("click", function () {
-        editButton.classList.remove(`invisible`);
-        recipeView.render(data);
-        viewCard.classList.remove(`invisible`);
-  
-        //click on delete button
-        deleteButton.addEventListener(`click`, async () => {
-          await recipesApi.delete(data.id);
-          item.remove();
+    //recipe body
+    let item = document.createElement("div");
+    item.classList.add(`card`);
+    item.classList.add(`mb-2`);
+    item.innerHTML = `<div class="card-body">
+                        ${data.name}
+                      </div>`;
+    this.list.append(item);
+    item.classList.add(`${data.name}`);
+    //
+
+    //click on recipe
+    item.addEventListener("click", function () {
+      editButton.classList.remove(`invisible`);
+      recipeView.render(data);
+      viewCard.classList.remove(`invisible`);
+
+      //click on delete button
+      deleteButton.addEventListener(`click`, async () => {
+        await recipesApi.delete(data.id);
+        item.remove();
+        viewCard.classList.add(`invisible`);
+      });
+
+      //click on edit button
+      editButton.addEventListener(`click`, async () => {
+
+        //rendering edit area
+        editButton.classList.add(`invisible`);
+        let editList = document.querySelector(`.list-edit`);
+        editList.innerHTML = ``;
+        let name = document.querySelector(`.view-name`).textContent;
+        let ingredients = document.querySelector(`.view-ingr`).textContent;
+        let ingredientsList = document.querySelectorAll(`.ingr-li`);
+        console.log(ingredientsList);
+        let method = document.querySelector(`.view-method`).textContent;
+        let nameEdit = document.createElement(`input`);
+        let ingredientsEdit = document.createElement(`input`);
+        let methodEdit = document.createElement(`input`);
+
+        let valueForIngr = ``;
+        for (let i = 0; i < ingredientsList.length; i++) {
+          valueForIngr += ingredientsList[i].textContent;
+          if (i != ingredientsList.length - 1) {
+            valueForIngr += `, `;
+          }
+        }
+        nameEdit.value = name;
+        ingredientsEdit.value = valueForIngr;
+        methodEdit.value = method;
+        editList.append(nameEdit);
+        editList.append(ingredientsEdit);
+        editList.append(methodEdit);
+        nameEdit.focus();
+
+        //edit accept button
+        let editAccept = document.createElement(`button`);
+        editAccept.textContent = `accept`;
+        editList.append(editAccept);
+
+        //click on accept button
+        editAccept.addEventListener(`click`, async () => {
+          let newData = {
+            name: nameEdit.value,
+            ingredients: ingredientsEdit.value.split(", "), //.split(", ")
+            method: methodEdit.value,
+          };
+          //changing info in API
+          await recipesApi.edit(data.id, newData);
+          listView.render();
+          editList.innerHTML = ``;
           viewCard.classList.add(`invisible`);
         });
-  
-        //click on edit button
-        editButton.addEventListener(`click`, async () => {
-  
-          //rendering edit area
-          editButton.classList.add(`invisible`);
-          let editList = document.querySelector(`.list-edit`);
-          editList.innerHTML = ``;
-          let name = document.querySelector(`.view-name`).textContent;
-          let ingredients = document.querySelector(`.view-ingr`).textContent;
-          let ingredientsList = document.querySelectorAll(`.ingr-li`);
-          console.log(ingredientsList);
-          let method = document.querySelector(`.view-method`).textContent;
-          let nameEdit = document.createElement(`input`);
-          let ingredientsEdit = document.createElement(`input`);
-          let methodEdit = document.createElement(`input`);
-  
-          let valueForIngr = ``;
-          for (let i = 0; i < ingredientsList.length; i++) {
-            valueForIngr += ingredientsList[i].textContent;
-            if (i != ingredientsList.length - 1) {
-              valueForIngr += `, `;
-            }
-          }
-          nameEdit.value = name;
-          ingredientsEdit.value = valueForIngr;
-          methodEdit.value = method;
-          editList.append(nameEdit);
-          editList.append(ingredientsEdit);
-          editList.append(methodEdit);
-          nameEdit.focus();
-          
-          //edit accept button
-          let editAccept = document.createElement(`button`);
-          editAccept.textContent = `accept`;
-          editList.append(editAccept);
-          
-          //click on accept button
-          editAccept.addEventListener(`click`, async () => {
-            let newData = {
-              name: nameEdit.value,
-              ingredients: ingredientsEdit.value.split(", "), //.split(", ")
-              method: methodEdit.value,
-            };
-            //changing info in API
-            await recipesApi.edit(data.id, newData);
-            listView.render();
-            editList.innerHTML = ``;
-            viewCard.classList.add(`invisible`);
-          });
-        });
       });
-    }
+    });
   }
 }
 
