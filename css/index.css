@@ -3,7 +3,7 @@
 }
 
 body { 
-  cursor: url('assets/cursormini.png'), auto; 
+  cursor: url('../assets/cursormini2.png'), auto; 
 }
 
 .container {
@@ -289,4 +289,24 @@ ul {
 
 .left-column {
   width: 300px;
+}
+
+.block {
+    display: flex;
+    width: 380px;
+    margin-bottom: 5%;
+    align-items: center;
+  }
+textarea {
+
+  background-color: #00000023;
+  width: 100%; 
+  /* margin: 0% 0% 0% 50%; */
+  border-radius: 4%;
+}
+
+label {
+  align-items: center;
+  width: 75%;
+  height: 15%; 
 }
